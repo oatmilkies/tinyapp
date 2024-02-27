@@ -1,0 +1,20 @@
+{
+  "name": "tinyapp",
+  "version": "1.0.0",
+  "description": "A URL shortening service similar to TinyURL, Bitly, or Goo.gl created for learning purposes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oatmilkies/tinyapp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oatmilkies/tinyapp/issues"
+  },
+  "homepage": "https://github.com/oatmilkies/tinyapp#readme"
+}
