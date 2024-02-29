@@ -10,13 +10,13 @@ const urlDatabase = {
 };
 
 function generateRandomString() {
-  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  const charLength = chars.length;
+  const possibleChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const charLength = possibleChars.length;
   const length = 6;
   let result = '';
 
   for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * charLength));
+    result += possibleChars.charAt(Math.floor(Math.random() * charLength));
   }
   return result;
 }
@@ -81,8 +81,6 @@ app.post("/urls", (req, res) => {
 
   //Save short and long url mapping to the database
   urlDatabase[shortURL] = longURL;
-
-  console.log(req.body); // Log the POST request body to the console
 
   // Redirect to the new URL's page
   res.redirect(`/urls/${shortURL}`);
