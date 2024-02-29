@@ -4,11 +4,13 @@ const PORT = 8080; // default port 8080
 
 app.set("view engine", "ejs");
 
+//Initial url database
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
+//Generate a random character string 6 charcters long
 function generateRandomString() {
   const possibleChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   const charLength = possibleChars.length;
@@ -35,15 +37,18 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
+//Render url database
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
 });
 
+//Render submit new url page
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+//Render the page showing long url and its short url
 app.get("/urls/:id", (req, res) => {
   //req.params.id is the short url
   const templateVars = {
@@ -58,13 +63,14 @@ app.get("/urls/:id", (req, res) => {
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id];
 
-//Check if id exists in the database. Display error if doesn't. Redirect if does
+  //Check if id exists in url database. Display error if it doesn't. Redirect if it does
   if (!urlDatabase[req.params.id]) {
     res.send(`<html><body>ERROR! Shor URL ${req.params.id} doesn't exist</b></body></html>\n`);
   } else
     res.redirect(longURL);
 });
 
+//Post the newly added long and short urls to the database
 app.post("/urls", (req, res) => {
   //Create short url
   const shortURL = generateRandomString();
@@ -79,7 +85,7 @@ app.post("/urls", (req, res) => {
     longURL = "http://" + longURL;
   }
 
-  //Save short and long url mapping to the database
+  //Save short and long url mapping
   urlDatabase[shortURL] = longURL;
 
   // Redirect to the new URL's page
