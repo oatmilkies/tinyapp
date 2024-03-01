@@ -61,11 +61,12 @@ app.get("/urls/:id", (req, res) => {
 
 //Redirect to the long url (id is the short url)
 app.get("/u/:id", (req, res) => {
-  const longURL = urlDatabase[req.params.id];
+  const id = req.params.id;
+  const longURL = urlDatabase[id];
 
   //Check if id exists in url database. Display error if it doesn't. Redirect if it does
-  if (!urlDatabase[req.params.id]) {
-    res.send(`<html><body>ERROR! Shor URL ${req.params.id} doesn't exist</b></body></html>\n`);
+  if (!urlDatabase[id]) {
+    res.send(`<html><body>ERROR! Shor URL ${id} doesn't exist</b></body></html>\n`);
   } else
     res.redirect(longURL);
 });
@@ -88,8 +89,17 @@ app.post("/urls", (req, res) => {
   //Save short and long url mapping
   urlDatabase[shortURL] = longURL;
 
-  // Redirect to the new URL's page
+  //Redirect to the new URL's page
   res.redirect(`/urls/${shortURL}`);
+});
+
+//Remove a url from the database
+app.post("/urls/:id/delete", (req, res) => {
+  const id = req.params.id;
+  delete urlDatabase[id];
+
+  //Redirect back to the index page
+  res.redirect("/urls")
 });
 
 app.listen(PORT, () => {
