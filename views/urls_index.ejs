@@ -33,7 +33,13 @@
             <td>
               <%= urls[id] %>
             </td>
-            <!-- Create a delete button or each database entry -->
+            <!-- Button to update each database entry -->
+            <td>
+              <form method="GET" action="/urls/<%= id %>">
+                <button type="submit" class="btn btn-primary">Edit</button>
+              </form>
+            </td>
+            <!-- Button to delete each database entry -->
             <td>
               <form method="POST" action="/urls/<%= id %>/delete">
                 <button type="submit" class="btn btn-primary">Delete</button>
