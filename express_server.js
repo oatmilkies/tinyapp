@@ -103,11 +103,11 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 //Edit a long url in the database
-app.post("/urls/:id/edit", (req, res) => {
+app.post("/urls/:id", (req, res) => {
   const id = req.params.id;
   const longURL = req.body.longURL;
 
-  console.log(req.body)
+  //console.log(req.body)
 
   urlDatabase[id] = longURL;
 
