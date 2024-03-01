@@ -26,7 +26,11 @@
       <h5 class="card-title">Edit</h5>
       <form method="POST" action="/urls/<%= id %>/">
         <label for="longURL">New URL: </label>
-        <input id="longURL" name="longURL" type="text"/>
+        <input
+          id="longURL"
+          name="longURL"
+          type="text"
+          placeholder="<%= longURL %>"/>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
