@@ -107,9 +107,17 @@ app.post("/urls/:id", (req, res) => {
   const id = req.params.id;
   const longURL = req.body.longURL;
 
-  //console.log(req.body)
-
+  //Save the edited url into the database
   urlDatabase[id] = longURL;
+
+  //Redirect back to the index page
+  res.redirect("/urls")
+});
+
+app.post("/login", (req, res) => {
+  //Get the username from the request body
+  const username = req.body.username;
+  res.cookie('username', username)
 
   //Redirect back to the index page
   res.redirect("/urls")
