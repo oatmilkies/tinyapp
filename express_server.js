@@ -1,8 +1,10 @@
 const express = require("express");
+const cookieParser = require('cookie-parser')
 const app = express();
 const PORT = 8080; // default port 8080
 
 app.set("view engine", "ejs");
+app.use(cookieParser())
 
 //Initial url database
 const urlDatabase = {
@@ -39,13 +41,14 @@ app.get("/hello", (req, res) => {
 
 //Render url database
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
   res.render("urls_index", templateVars);
 });
 
 //Render submit new url page
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  res.render("urls_new", templateVars);
 });
 
 //Render the page showing long url and its short url
@@ -53,7 +56,8 @@ app.get("/urls/:id", (req, res) => {
   //req.params.id is the short url
   const templateVars = {
     id: req.params.id,
-    longURL: urlDatabase[req.params.id]
+    longURL: urlDatabase[req.params.id],
+    username: req.cookies["username"]
   };
 
   res.render("urls_show", templateVars);
@@ -117,7 +121,7 @@ app.post("/urls/:id", (req, res) => {
 app.post("/login", (req, res) => {
   //Get the username from the request body
   const username = req.body.username;
-  res.cookie('username', username)
+  res.cookie("username", username)
 
   //Redirect back to the index page
   res.redirect("/urls")
