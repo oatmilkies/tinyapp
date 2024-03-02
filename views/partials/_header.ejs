@@ -8,9 +8,16 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
-        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-        <form class="form-inline" method="POST" action="/login">
-          <label for="username" style="margin: 1em">Logged in as: <%= username %></label>
+        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>     
+        <% if (username) { %>
+          <p>Logged in as: <%= username %></p>
+          <form class="form-inline" method="POST" action="/logout">          
+          <button type="submit" class="btn btn-secondary">Logout</button>
+        </form>
+        <% } else { %>                
+          <p>Login: </p>        
+          <form class="form-inline" method="POST" action="/login">
+          <label for="username"></label> 
           <input
             id="username"
             name="username"
@@ -18,8 +25,9 @@
             placeholder="Username"
             style="width: 200px; margin: 1em"
           />
-          <button type="submit" class="btn btn-primary">Login</button>
+          <button type="submit" class="btn btn-warning">Login</button>
         </form>
+        <% } %>
       </div>
     </div>
   </nav>

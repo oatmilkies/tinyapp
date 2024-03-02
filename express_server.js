@@ -114,17 +114,23 @@ app.post("/urls/:id", (req, res) => {
   //Save the edited url into the database
   urlDatabase[id] = longURL;
 
-  //Redirect back to the index page
-  res.redirect("/urls")
+  res.redirect("/urls");
 });
 
+//Create cookie to store username when user logs in
 app.post("/login", (req, res) => {
   //Get the username from the request body
   const username = req.body.username;
-  res.cookie("username", username)
+  res.cookie("username", username);
 
-  //Redirect back to the index page
-  res.redirect("/urls")
+  res.redirect("/urls");
+});
+
+//Clear cookie when user logs out
+app.post("/logout", (req, res) => {
+  res.clearCookie("username");
+
+  res.redirect("/urls");
 });
 
 app.listen(PORT, () => {
