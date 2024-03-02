@@ -9,9 +9,8 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-        <p>Logged in as: <%= username %></p>
         <form class="form-inline" method="POST" action="/login">
-          <label for="longURL"></label>
+          <label for="username" style="margin: 1em">Logged in as: <%= username %></label>
           <input
             id="username"
             name="username"
