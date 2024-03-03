@@ -168,12 +168,14 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
+  const email = req.body.email.trim();
+  const password = req.body.password.trim();
 
   //Validate email and password
-  if (req.body.email.trim() === "" || req.body.password.trim() === "") {
+  if (email === "" || password === "") {
     res.status(400).send("Cannot leave email or password blank!");
     //Check if email exists in the users database
-  } else if (getUserEmail(users, req.body.email)) {
+  } else if (getUserEmail(users, email)) {
     res.status(400).send("Email already exists! Cannot use duplicate email.");
     //If doesn't exist, add new user to database
   } else {
@@ -182,7 +184,7 @@ app.post("/register", (req, res) => {
     res.cookie("user_id", id);
 
     users[id] = {
-      id: id, email: req.body.email, password: req.body.password
+      id: id, email: email, password: password
     };
 
     res.redirect("/urls");
