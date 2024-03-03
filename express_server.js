@@ -1,10 +1,10 @@
 const express = require("express");
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const app = express();
 const PORT = 8080; // default port 8080
 
 app.set("view engine", "ejs");
-app.use(cookieParser())
+app.use(cookieParser());
 
 //Initial url database
 const urlDatabase = {
@@ -27,7 +27,7 @@ const users = {
 };
 
 //Generate a random character string 6 charcters long
-function generateRandomString(idLength) {
+const generateRandomString = function(idLength) {
   const possibleChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   const charLength = possibleChars.length;
   const length = idLength;
@@ -37,7 +37,22 @@ function generateRandomString(idLength) {
     result += possibleChars.charAt(Math.floor(Math.random() * charLength));
   }
   return result;
-}
+};
+
+//Check if user is in the users database already
+const getUserEmail = function(users, email) {
+  let found = false;
+
+  for (const user in users) {
+    if (email === users[user].email) {
+      console.log(email, users[user].email, email === users[user].email);
+      found = true;
+    }
+  }
+
+  return found;
+
+};
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -75,8 +90,9 @@ app.get("/register", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   //req.params.id is the short url
   const templateVars = {
-    id: req.params.id,
+    //id: req.params.id,
     longURL: urlDatabase[req.params.id],
+    users: users,
     id: req.cookies["user_id"]
   };
 
@@ -123,7 +139,7 @@ app.post("/urls/:id/delete", (req, res) => {
   delete urlDatabase[id];
 
   //Redirect back to the index page
-  res.redirect("/urls")
+  res.redirect("/urls");
 });
 
 //Edit a long url in the database
@@ -154,16 +170,25 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  //Generate user ID and set in cookie
-  const id = generateRandomString(12);
-  res.cookie("user_id", id);
 
-  //Add new user to database
-  users[id] = {
-    id: id, email: req.body.email, password: req.body.password
+  //Validate email and password
+  if (req.body.email === "" || req.body.password === "") {
+    res.status(400).send("CANNOT LEAVE EMAIL OR PASSWORD BLANK!");
+    //Check if email exists in the users database
+  } else if (getUserEmail(users, req.body.email)) {
+    res.status(400).send("DUPLICATE EMAIL! CANNOT REGISTER NEW USER");
+    //If doesn't exist, add new user to database
+  } else {
+    //Generate user ID and set in cookie
+    const id = generateRandomString(12);
+    res.cookie("user_id", id);
+
+    users[id] = {
+      id: id, email: req.body.email, password: req.body.password
+    };
+
+    res.redirect("/urls");
   }
-  
-  res.redirect("/urls");
 });
 
 app.listen(PORT, () => {
