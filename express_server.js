@@ -13,16 +13,24 @@ const urlDatabase = {
 };
 
 //User database
-const userInfo = {
-  "email": "myemail@google.com",
-  "password": "password123"
-}
+const users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  },
+};
 
 //Generate a random character string 6 charcters long
-function generateRandomString() {
+function generateRandomString(idLength) {
   const possibleChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   const charLength = possibleChars.length;
-  const length = 6;
+  const length = idLength;
   let result = '';
 
   for (let i = 0; i < length; i++) {
@@ -47,18 +55,19 @@ app.get("/hello", (req, res) => {
 
 //Render url database
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  const templateVars = { urls: urlDatabase, users: users, id: req.cookies["user_id"] };
   res.render("urls_index", templateVars);
 });
 
 //Render submit new url page
 app.get("/urls/new", (req, res) => {
-  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  const templateVars = { urls: urlDatabase, users: users, id: req.cookies["user_id"] };
   res.render("urls_new", templateVars);
 });
 
+//Render the new user registration page
 app.get("/register", (req, res) => {
-  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  const templateVars = { urls: urlDatabase, users: users, id: req.cookies["user_id"] };
   res.render("register", templateVars);
 });
 
@@ -68,7 +77,7 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = {
     id: req.params.id,
     longURL: urlDatabase[req.params.id],
-    username: req.cookies["username"]
+    id: req.cookies["user_id"]
   };
 
   res.render("urls_show", templateVars);
@@ -89,7 +98,7 @@ app.get("/u/:id", (req, res) => {
 //Post the newly added long and short urls to the database
 app.post("/urls", (req, res) => {
   //Create short url
-  const shortURL = generateRandomString();
+  const shortURL = generateRandomString(6);
   //Get long url from the request body
   let longURL = req.body.longURL;
 
@@ -132,15 +141,28 @@ app.post("/urls/:id", (req, res) => {
 app.post("/login", (req, res) => {
   //Get the username from the request body
   const username = req.body.username;
-  res.cookie("username", username);
+  res.cookie("user_id", username);
 
   res.redirect("/urls");
 });
 
 //Clear cookie when user logs out
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user_id");
 
+  res.redirect("/urls");
+});
+
+app.post("/register", (req, res) => {
+  //Generate user ID and set in cookie
+  const id = generateRandomString(12);
+  res.cookie("user_id", id);
+
+  //Add new user to database
+  users[id] = {
+    id: id, email: req.body.email, password: req.body.password
+  }
+  
   res.redirect("/urls");
 });
 
