@@ -45,7 +45,6 @@ const getUserEmail = function(users, email) {
 
   for (const user in users) {
     if (email === users[user].email) {
-      console.log(email, users[user].email, email === users[user].email);
       found = true;
     }
   }
@@ -90,7 +89,6 @@ app.get("/register", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   //req.params.id is the short url
   const templateVars = {
-    //id: req.params.id,
     longURL: urlDatabase[req.params.id],
     users: users,
     id: req.cookies["user_id"]
@@ -172,11 +170,11 @@ app.post("/logout", (req, res) => {
 app.post("/register", (req, res) => {
 
   //Validate email and password
-  if (req.body.email === "" || req.body.password === "") {
-    res.status(400).send("CANNOT LEAVE EMAIL OR PASSWORD BLANK!");
+  if (req.body.email.trim() === "" || req.body.password.trim() === "") {
+    res.status(400).send("Cannot leave email or password blank!");
     //Check if email exists in the users database
   } else if (getUserEmail(users, req.body.email)) {
-    res.status(400).send("DUPLICATE EMAIL! CANNOT REGISTER NEW USER");
+    res.status(400).send("Email already exists! Cannot use duplicate email.");
     //If doesn't exist, add new user to database
   } else {
     //Generate user ID and set in cookie
