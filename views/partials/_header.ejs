@@ -15,13 +15,12 @@
     </div>
 
     <div class="d-inline-flex justify-content-end">      
-      <% if (users[id]) { %>
-        <p>Logged in as: <%= users[id].email %></p>          
-        <form class="form-inline" method="POST" action="/logout">        
+      <% if (users[id]) { %>                  
+        <form class="form-inline" method="POST" action="/logout">
+          <label for="email" class="sr-only">email</label>
+          <input type="text" readonly class="form-control-plaintext" id="email" value="Logged in as: <%= users[id].email %>">
           <button type="submit" class="btn btn-secondary">Logout</button>
         </form>    
-      <% } else { %>
-    
       <% } %>    
     </div>
 
