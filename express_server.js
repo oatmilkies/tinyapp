@@ -12,6 +12,12 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+//User database
+const userInfo = {
+  "email": "myemail@google.com",
+  "password": "password123"
+}
+
 //Generate a random character string 6 charcters long
 function generateRandomString() {
   const possibleChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -49,6 +55,11 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
   res.render("urls_new", templateVars);
+});
+
+app.get("/register", (req, res) => {
+  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  res.render("register", templateVars);
 });
 
 //Render the page showing long url and its short url
