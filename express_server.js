@@ -50,10 +50,24 @@ const getUserEmail = function(users, email) {
   }
 
   return found;
+};
 
+//Check if password matches the stored password
+const validatePassword = function(users, password) {
+  let id = "";
+
+  for (const user in users) {
+    if (password === users[user].password) {
+      id = user;
+    }
+  }
+
+  return id;
 };
 
 app.use(express.urlencoded({ extended: true }));
+
+// -- GETS --
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -115,6 +129,8 @@ app.get("/u/:id", (req, res) => {
     res.redirect(longURL);
 });
 
+// -- POSTS --
+
 //Post the newly added long and short urls to the database
 app.post("/urls", (req, res) => {
   //Create short url
@@ -157,20 +173,32 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls");
 });
 
-//Create cookie to store username when user logs in
+//Handle user log in input
 app.post("/login", (req, res) => {
-  //Get the username from the request body
-  const username = req.body.username;
-  res.cookie("user_id", username);
+  const email = req.body.email.trim();
+  const password = req.body.password.trim();
+  const id = validatePassword(users, password);
 
-  res.redirect("/urls");
+  //Log in if email and password match
+  if (getUserEmail(users, email)) {
+    if (validatePassword(users, password) !== "") {
+      res.cookie("user_id", id);
+      res.redirect("/urls");
+      //Error if email ok but password doesn't match
+    } else {
+      res.status(403).send("Invalid password");
+    }
+    //Error if user email not in database
+  } else {
+    res.status(403).send("User not found");
+  }
 });
 
 //Clear cookie when user logs out
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id");
 
-  res.redirect("/urls");
+  res.redirect("/login");
 });
 
 app.post("/register", (req, res) => {
