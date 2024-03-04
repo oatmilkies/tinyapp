@@ -9,20 +9,28 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-        <a class="nav-item nav-link" href="/register">Register</a> 
-        <a class="nav-item nav-link" href="/login">Login</a> 
       </div>
-    </div>
 
-    <div class="d-inline-flex justify-content-end">      
-      <% if (users[id]) { %>                  
-        <form class="form-inline" method="POST" action="/logout">
-          <label for="email" class="sr-only">email</label>
-          <input type="text" readonly class="form-control-plaintext" id="email" value="Logged in as: <%= users[id].email %>">
-          <button type="submit" class="btn btn-secondary">Logout</button>
-        </form>    
-      <% } %>    
-    </div>
+      <% if (!users[id]) { %>
+        <div class="navbar-nav">
+          <a class="nav-item nav-link" href="/register">Register</a>
+          <a class="nav-item nav-link" href="/login">Login</a>
+        </div>
+        <% } else { %>
+          <form class="form-inline" method="POST" action="/logout">
+            <div class="form-group mb-2">
+              <label for="email" class="sr-only">Email</label>
+              <input
+                type="text"
+                readonly class="form-control-plaintext"
+                id="email"
+                value="Logged in as: <%= users[id].email %>"
+                style="width: 250px"
+              />
+            </div>
+            <button type="submit" class="btn btn-secondary">Logout</button>
+          </form>
+          <% } %>
 
   </nav>
 </header>
