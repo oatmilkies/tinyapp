@@ -8,8 +8,14 @@ app.use(cookieParser());
 
 //Initial url database
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {
+    longURL: "http://www.lighthouselabs.ca",
+    userID: "userRandomID",
+  },
+  "9sm5xK": {
+    longURL: "http://www.google.com",
+    userID: "userRandomID",
+  }
 };
 
 //User database
@@ -102,7 +108,7 @@ app.get("/urls/:id", (req, res) => {
   //req.params.id is the short url
   const templateVars = {
     shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id],
+    longURL: urlDatabase[req.params.id].longURL,
     users: users,
     id: req.cookies["user_id"]
   };
@@ -113,7 +119,7 @@ app.get("/urls/:id", (req, res) => {
 //Redirect to the long url (id is the short url)
 app.get("/u/:id", (req, res) => {
   const id = req.params.id;
-  const longURL = urlDatabase[id];
+  const longURL = urlDatabase[id].longURL;
 
   //Check if id exists in url database. Display error if it doesn't. Redirect if it does
   if (!urlDatabase[id]) {
@@ -144,7 +150,7 @@ app.post("/urls", (req, res) => {
     }
 
     //Save short and long url mapping
-    urlDatabase[shortURL] = longURL;
+    urlDatabase[shortURL] = {longURL: longURL};
 
     //Redirect to the new URL's page
     res.redirect(`/urls/${shortURL}`);
@@ -155,7 +161,7 @@ app.post("/urls", (req, res) => {
 //Remove a url from the database
 app.post("/urls/:id/delete", (req, res) => {
   const id = req.params.id;
-  delete urlDatabase[id];
+  delete urlDatabase[id].longURL;
 
   //Redirect back to the index page
   res.redirect("/urls");
@@ -167,7 +173,7 @@ app.post("/urls/:id", (req, res) => {
   const longURL = req.body.longURL;
 
   //Save the edited url into the database
-  urlDatabase[id] = longURL;
+  urlDatabase[id].longURL = longURL;
 
   res.redirect("/urls");
 });
@@ -182,7 +188,7 @@ app.post("/login", (req, res) => {
     res.cookie("user_id", checkUser.id);
     res.redirect("/urls");
   } else {
-    res.status(403).send("Email and password don't match");
+    res.status(403).send("Invalid login");
   }
 });
 
