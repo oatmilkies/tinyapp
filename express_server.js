@@ -200,7 +200,7 @@ app.post("/register", (req, res) => {
   const checkUser = getUserByEmail(users, email);
 
   //Validate email and password
-  if (email === "" || password === "") {
+  if (!email || !password) {
     res.status(400).send("Cannot leave email or password blank!");
     //Check if email exists in the users database
   } else if (checkUser.email === email) {
