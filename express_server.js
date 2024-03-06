@@ -39,30 +39,17 @@ const generateRandomString = function(idLength) {
   return result;
 };
 
-//Check if user is in the users database already
-const getUserEmail = function(users, email) {
-  let found = false;
+//Find a user by their email address
+const getUserByEmail = function(users, email) {
+  let foundUser = {};
 
   for (const user in users) {
     if (email === users[user].email) {
-      found = true;
+      foundUser = users[user];
     }
   }
 
-  return found;
-};
-
-//Check if password matches the stored password
-const validatePassword = function(users, password) {
-  let id = "";
-
-  for (const user in users) {
-    if (password === users[user].password) {
-      id = user;
-    }
-  }
-
-  return id;
+  return foundUser;
 };
 
 app.use(express.urlencoded({ extended: true }));
@@ -177,20 +164,13 @@ app.post("/urls/:id", (req, res) => {
 app.post("/login", (req, res) => {
   const email = req.body.email.trim();
   const password = req.body.password.trim();
-  const id = validatePassword(users, password);
+  const checkUser = getUserByEmail(users, email);
 
-  //Log in if email and password match
-  if (getUserEmail(users, email)) {
-    if (validatePassword(users, password) !== "") {
-      res.cookie("user_id", id);
-      res.redirect("/urls");
-      //Error if email ok but password doesn't match
-    } else {
-      res.status(403).send("Invalid password");
-    }
-    //Error if user email not in database
+  if (checkUser.email === email && checkUser.password === password) {
+    res.cookie("user_id", checkUser.id);
+    res.redirect("/urls");
   } else {
-    res.status(403).send("User not found");
+    res.status(403).send("Email and password don't match");
   }
 });
 
@@ -201,15 +181,17 @@ app.post("/logout", (req, res) => {
   res.redirect("/login");
 });
 
+//Handle user registration data
 app.post("/register", (req, res) => {
   const email = req.body.email.trim();
   const password = req.body.password.trim();
-
+  const checkUser = getUserByEmail(users, email);
+  
   //Validate email and password
   if (email === "" || password === "") {
     res.status(400).send("Cannot leave email or password blank!");
     //Check if email exists in the users database
-  } else if (getUserEmail(users, email)) {
+  } else if (checkUser.email === email) {
     res.status(400).send("Email already exists! Cannot use duplicate email.");
     //If doesn't exist, add new user to database
   } else {
