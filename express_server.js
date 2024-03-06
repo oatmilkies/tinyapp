@@ -101,6 +101,7 @@ app.get("/login", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   //req.params.id is the short url
   const templateVars = {
+    shortURL: req.params.id,
     longURL: urlDatabase[req.params.id],
     users: users,
     id: req.cookies["user_id"]
@@ -116,7 +117,7 @@ app.get("/u/:id", (req, res) => {
 
   //Check if id exists in url database. Display error if it doesn't. Redirect if it does
   if (!urlDatabase[id]) {
-    res.send(`<html><body>ERROR! Shor URL ${id} doesn't exist</b></body></html>\n`);
+    res.send(`<html><body>ERROR! Short URL ${id} doesn't exist</b></body></html>\n`);
   } else
     res.redirect(longURL);
 });
@@ -127,28 +128,27 @@ app.get("/u/:id", (req, res) => {
 app.post("/urls", (req, res) => {
 
   if (!req.cookies["user_id"]) {
-    res.send("You must be logged in to create a tiny URL!")
+    res.send("You must be logged in to create a tiny URL!");
   } else {
 
-  //Create short url
-  const shortURL = generateRandomString(6);
-  //Get long url from the request body
-  let longURL = req.body.longURL;
+    //Create short url
+    const shortURL = generateRandomString(6);
+    let longURL = req.body.longURL;
 
-  //If the user didn't add http:// or https://, add http
-  const httpRegex = /^http:\/\//;
-  const httpsRegex = /^https:\/\//;
+    //If the user didn't add http:// or https://, add http
+    const httpRegex = /^http:\/\//;
+    const httpsRegex = /^https:\/\//;
 
-  if (!httpRegex.test(longURL) && !httpsRegex.test(longURL)) {
-    longURL = "http://" + longURL;
-  }
+    if (!httpRegex.test(longURL) && !httpsRegex.test(longURL)) {
+      longURL = "http://" + longURL;
+    }
 
-  //Save short and long url mapping
-  urlDatabase[shortURL] = longURL;
+    //Save short and long url mapping
+    urlDatabase[shortURL] = longURL;
 
-  //Redirect to the new URL's page
-  res.redirect(`/urls/${shortURL}`);
-};
+    //Redirect to the new URL's page
+    res.redirect(`/urls/${shortURL}`);
+  };
 
 });
 
@@ -198,7 +198,7 @@ app.post("/register", (req, res) => {
   const email = req.body.email.trim();
   const password = req.body.password.trim();
   const checkUser = getUserByEmail(users, email);
-  
+
   //Validate email and password
   if (email === "" || password === "") {
     res.status(400).send("Cannot leave email or password blank!");
