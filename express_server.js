@@ -77,7 +77,11 @@ app.get("/hello", (req, res) => {
 //Render url database
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase, users: users, id: req.cookies["user_id"] };
+  if (req.cookies["user_id"]) {
   res.render("urls_index", templateVars);
+} else {
+  res.send("You must be logged in to view URLs");
+}
 });
 
 //Render submit new url page
