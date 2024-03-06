@@ -77,7 +77,12 @@ app.get("/urls", (req, res) => {
 //Render submit new url page
 app.get("/urls/new", (req, res) => {
   const templateVars = { urls: urlDatabase, users: users, id: req.cookies["user_id"] };
-  res.render("urls_new", templateVars);
+
+  if (req.cookies["user_id"]) {
+    res.render("urls_new", templateVars);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 //Render the new user registration page
@@ -120,6 +125,11 @@ app.get("/u/:id", (req, res) => {
 
 //Post the newly added long and short urls to the database
 app.post("/urls", (req, res) => {
+
+  if (!req.cookies["user_id"]) {
+    res.send("You must be logged in to create a tiny URL!")
+  } else {
+
   //Create short url
   const shortURL = generateRandomString(6);
   //Get long url from the request body
@@ -138,6 +148,8 @@ app.post("/urls", (req, res) => {
 
   //Redirect to the new URL's page
   res.redirect(`/urls/${shortURL}`);
+};
+
 });
 
 //Remove a url from the database
