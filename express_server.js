@@ -74,15 +74,18 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-//Render url database
-app.get("/urls", (req, res) => {
+//Render the new user registration page
+app.get("/register", (req, res) => {
   const templateVars = { urls: urlDatabase, users: users, id: req.cookies["user_id"] };
-  if (req.cookies["user_id"]) {
-  res.render("urls_index", templateVars);
-} else {
-  res.send("You must be logged in to view URLs");
-}
+  res.render("register", templateVars);
 });
+
+//Render the login page
+app.get("/login", (req, res) => {
+  const templateVars = { urls: urlDatabase, users: users, id: req.cookies["user_id"] };
+  res.render("login", templateVars);
+});
+
 
 //Render submit new url page
 app.get("/urls/new", (req, res) => {
@@ -95,17 +98,36 @@ app.get("/urls/new", (req, res) => {
   }
 });
 
-//Render the new user registration page
-app.get("/register", (req, res) => {
-  const templateVars = { urls: urlDatabase, users: users, id: req.cookies["user_id"] };
-  res.render("register", templateVars);
+
+//Render list of short and long urls for the user logged in
+app.get("/urls", (req, res) => {
+  //Create a list of urls for a logged in user
+  const urlsForUserID = function(urls, id) {
+    const urlList = {};
+
+    for (const key in urls) {
+      if (urls[key].userID === id) {
+        urlList[key] = urls[key].longURL;
+      }
+    }
+
+    return urlList;
+  };
+
+  const templateVars = {
+    urls: urlDatabase,
+    users: users,
+    id: req.cookies["user_id"],
+    userURLs: urlsForUserID(urlDatabase, req.cookies["user_id"])
+  };
+
+  if (req.cookies["user_id"]) {
+    res.render("urls_index", templateVars);
+  } else {
+    res.send("You must be logged in to view URLs");
+  }
 });
 
-//Render the login page
-app.get("/login", (req, res) => {
-  const templateVars = { urls: urlDatabase, users: users, id: req.cookies["user_id"] };
-  res.render("login", templateVars);
-});
 
 //Render the page showing long url and its short url
 app.get("/urls/:id", (req, res) => {
@@ -120,16 +142,22 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+
 //Redirect to the long url (id is the short url)
 app.get("/u/:id", (req, res) => {
   const id = req.params.id;
   const longURL = urlDatabase[id].longURL;
 
-  //Check if id exists in url database. Display error if it doesn't. Redirect if it does
-  if (!urlDatabase[id]) {
-    res.send(`<html><body>ERROR! Short URL ${id} doesn't exist</b></body></html>\n`);
-  } else
-    res.redirect(longURL);
+  if (!req.cookies["user_id"]) {
+    res.send("You must be logged in to view the URLS");
+  } else {
+
+    //Check if id exists in url database. Display error if it doesn't. Redirect if it does
+    if (!urlDatabase[id]) {
+      res.send(`<html><body>ERROR! Short URL ${id} doesn't exist</b></body></html>\n`);
+    } else
+      res.redirect(longURL);
+  }
 });
 
 // -- POSTS --
@@ -153,8 +181,9 @@ app.post("/urls", (req, res) => {
       longURL = "http://" + longURL;
     }
 
-    //Save short and long url mapping
-    urlDatabase[shortURL] = {longURL: longURL};
+    //Save short and long url mapping along with the userID
+    urlDatabase[shortURL] = { longURL: longURL };
+    urlDatabase[shortURL].userID = req.cookies["user_id"];
 
     //Redirect to the new URL's page
     res.redirect(`/urls/${shortURL}`);

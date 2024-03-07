@@ -26,13 +26,13 @@
       </thead>
       <!-- Print each short URL and long URL in the urlDatabase -->
       <tbody>
-        <% for (let id in urls) { %>
+        <% for (let id in userURLs) { %>
           <tr>
             <td>
               <%= id %>
             </td>
             <td>
-              <%= urls[id].longURL %>
+              <%= userURLs[id] %>
             </td>
             <!-- Button to update each database entry -->
             <td>
