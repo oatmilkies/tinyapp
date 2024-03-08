@@ -164,7 +164,7 @@ app.get("/urls/:id", (req, res) => {
     res.render("urls_show", templateVars);
   } else {
     res.send("Cannot view a URL that does not belong to you!");
-  };
+  }
 });
 
 
@@ -172,7 +172,6 @@ app.get("/urls/:id", (req, res) => {
 app.get("/u/:id", (req, res) => {
   const id = req.params.id;
   const longURL = urlDatabase[id].longURL;
-
   const userURLs = urlsForUserID(urlDatabase, req.cookies["user_id"]);
 
   //Check if user is logged in
@@ -216,28 +215,43 @@ app.post("/urls", (req, res) => {
 
     //Redirect to the new URL's page
     res.redirect(`/urls/${shortURL}`);
-  };
+  }
 });
 
 
 //Remove a url from the database
 app.post("/urls/:id/delete", (req, res) => {
+  //id is shortURL
   const id = req.params.id;
-  delete urlDatabase[id].longURL;
+  const userURLs = urlsForUserID(urlDatabase, req.cookies["user_id"]);
 
-  //Redirect back to the index page
-  res.redirect("/urls");
+  if (!req.cookies["user_id"]) {
+    res.send("You must be logged in to delete a URL!");
+  } else if (!checkURL(userURLs, urlDatabase, id, req.cookies["user_id"])) {
+    res.send("Cannot delete a URL that does not belong to you!");
+    //Delete the database entry
+  } else {
+    delete urlDatabase[id];
+    res.redirect("/urls");
+  }
 });
 
 //Edit a long url in the database
 app.post("/urls/:id", (req, res) => {
+  //id is shortURL
   const id = req.params.id;
   const longURL = req.body.longURL;
+  const userURLs = urlsForUserID(urlDatabase, req.cookies["user_id"]);
 
-  //Save the edited url into the database
-  urlDatabase[id].longURL = longURL;
-
-  res.redirect("/urls");
+  if (!req.cookies["user_id"]) {
+    res.send("You must be logged in!");
+  } else if (!checkURL(userURLs, urlDatabase, id, req.cookies["user_id"])) {
+    res.send("Cannot edit a URL that does not belong to you!");
+    //Save the edited url into the database
+  } else {
+    urlDatabase[id].longURL = longURL;
+    res.redirect("/urls");
+  }
 });
 
 
