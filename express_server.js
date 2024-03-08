@@ -12,12 +12,15 @@ const {
 
 app.set("view engine", "ejs");
 
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2'],
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
+
 
 //Initial url database
 const urlDatabase = {
@@ -44,9 +47,6 @@ const users = {
     password: "dishwasher-funk",
   },
 };
-
-
-app.use(express.urlencoded({ extended: true }));
 
 
 // -- GETS --
@@ -195,6 +195,7 @@ app.post("/urls/:id/delete", (req, res) => {
   }
 });
 
+
 //Edit a long url in the database
 app.post("/urls/:id", (req, res) => {
   //id is the shortURL
@@ -258,13 +259,12 @@ app.post("/register", (req, res) => {
     //Check if email exists in the users database
   } else if (checkUser.email === email) {
     res.status(400).send("Email already exists! Cannot use duplicate email.");
-    //If doesn't exist, add new user to database
   } else {
     //Generate user ID, encrypt, and set in cookie
     const id = generateRandomString(12);
     req.session.user_id = id;
     res.cookie("user_id", req.session.user_id);
-
+    //Save new user to the database
     users[req.session.user_id] = {
       id: req.session.user_id, email: email, password: hashedPassword
     };
@@ -280,6 +280,7 @@ app.post("/login", (req, res) => {
   const password = req.body.password;
   const checkUser = getUserByEmail(users, email);
 
+  //Validate user email and password
   if (checkUser.email === email && bcrypt.compareSync(password, checkUser.password)) {
     req.session.user_id = checkUser.id;
     res.cookie("user_id", checkUser.id);
