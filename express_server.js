@@ -58,7 +58,34 @@ const getUserByEmail = function(users, email) {
   return foundUser;
 };
 
+//Create a list of urls for a logged in user
+const urlsForUserID = function(urls, id) {
+  const urlList = {};
+
+  for (const key in urls) {
+    if (urls[key].userID === id) {
+      urlList[key] = urls[key].longURL;
+    }
+  }
+
+  return urlList;
+};
+
+//Check if a short url is accessible to a user
+const checkURL = function(userList, database, shortURL, id) {
+  let found = false;
+
+  for (const key in userList) {
+    if (Object.keys(userList).includes(shortURL) && database[key].userID === id) {
+      found = true;
+    }
+  }
+  return found;
+};
+
+
 app.use(express.urlencoded({ extended: true }));
+
 
 // -- GETS --
 
@@ -66,19 +93,23 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
+
 
 //Render the new user registration page
 app.get("/register", (req, res) => {
   const templateVars = { urls: urlDatabase, users: users, id: req.cookies["user_id"] };
   res.render("register", templateVars);
 });
+
 
 //Render the login page
 app.get("/login", (req, res) => {
@@ -101,19 +132,6 @@ app.get("/urls/new", (req, res) => {
 
 //Render list of short and long urls for the user logged in
 app.get("/urls", (req, res) => {
-  //Create a list of urls for a logged in user
-  const urlsForUserID = function(urls, id) {
-    const urlList = {};
-
-    for (const key in urls) {
-      if (urls[key].userID === id) {
-        urlList[key] = urls[key].longURL;
-      }
-    }
-
-    return urlList;
-  };
-
   const templateVars = {
     urls: urlDatabase,
     users: users,
@@ -139,7 +157,14 @@ app.get("/urls/:id", (req, res) => {
     id: req.cookies["user_id"]
   };
 
-  res.render("urls_show", templateVars);
+
+  const userURLs = urlsForUserID(urlDatabase, templateVars.id);
+  //Make sure shortURL belongs to the logged in user
+  if (checkURL(userURLs, urlDatabase, templateVars.shortURL, templateVars.id)) {
+    res.render("urls_show", templateVars);
+  } else {
+    res.send("Cannot view a URL that does not belong to you!");
+  };
 });
 
 
@@ -148,27 +173,31 @@ app.get("/u/:id", (req, res) => {
   const id = req.params.id;
   const longURL = urlDatabase[id].longURL;
 
+  const userURLs = urlsForUserID(urlDatabase, req.cookies["user_id"]);
+
+  //Check if user is logged in
   if (!req.cookies["user_id"]) {
     res.send("You must be logged in to view the URLS");
-  } else {
-
-    //Check if id exists in url database. Display error if it doesn't. Redirect if it does
-    if (!urlDatabase[id]) {
-      res.send(`<html><body>ERROR! Short URL ${id} doesn't exist</b></body></html>\n`);
-    } else
-      res.redirect(longURL);
-  }
+    //Make sure shortURL belongs to the logged in user
+  } else if (!checkURL(userURLs, urlDatabase, id, req.cookies["user_id"])) {
+    res.send("Cannot view a URL that does not belong to you!");
+    //Check if shortURL is in the database
+  } else if (!urlDatabase[id]) {
+    res.send(`<html><body>ERROR! Short URL ${id} doesn't exist</b></body></html>\n`);
+  } else
+    res.redirect(longURL);
 });
+
 
 // -- POSTS --
 
+
 //Post the newly added long and short urls to the database
 app.post("/urls", (req, res) => {
-
+  //Check if user is logged in
   if (!req.cookies["user_id"]) {
     res.send("You must be logged in to create a tiny URL!");
   } else {
-
     //Create short url
     const shortURL = generateRandomString(6);
     let longURL = req.body.longURL;
@@ -188,8 +217,8 @@ app.post("/urls", (req, res) => {
     //Redirect to the new URL's page
     res.redirect(`/urls/${shortURL}`);
   };
-
 });
+
 
 //Remove a url from the database
 app.post("/urls/:id/delete", (req, res) => {
@@ -211,6 +240,7 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls");
 });
 
+
 //Handle user log in input
 app.post("/login", (req, res) => {
   const email = req.body.email.trim();
@@ -225,12 +255,14 @@ app.post("/login", (req, res) => {
   }
 });
 
+
 //Clear cookie when user logs out
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id");
 
   res.redirect("/login");
 });
+
 
 //Handle user registration data
 app.post("/register", (req, res) => {
@@ -257,6 +289,7 @@ app.post("/register", (req, res) => {
     res.redirect("/urls");
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
