@@ -1,5 +1,6 @@
 const express = require("express");
 const cookieParser = require('cookie-parser');
+const bcrypt = require("bcryptjs");
 const app = express();
 const PORT = 8080; // default port 8080
 
@@ -195,34 +196,6 @@ app.get("/u/:id", (req, res) => {
 // -- POSTS --
 
 
-//Post the newly added long and short urls to the database
-app.post("/urls", (req, res) => {
-  //Check if user is logged in
-  if (!req.cookies["user_id"]) {
-    res.send("You must be logged in to create a tiny URL!");
-  } else {
-    //Create short url
-    const shortURL = generateRandomString(6);
-    let longURL = req.body.longURL;
-
-    //If the user didn't add http:// or https://, add http
-    const httpRegex = /^http:\/\//;
-    const httpsRegex = /^https:\/\//;
-
-    if (!httpRegex.test(longURL) && !httpsRegex.test(longURL)) {
-      longURL = "http://" + longURL;
-    }
-
-    //Save short and long url mapping along with the userID
-    urlDatabase[shortURL] = { longURL: longURL };
-    urlDatabase[shortURL].userID = req.cookies["user_id"];
-
-    //Redirect to the new URL's page
-    res.redirect(`/urls/${shortURL}`);
-  }
-});
-
-
 //Remove a url from the database
 app.post("/urls/:id/delete", (req, res) => {
   //id is shortURL
@@ -259,26 +232,31 @@ app.post("/urls/:id", (req, res) => {
 });
 
 
-//Handle user log in input
-app.post("/login", (req, res) => {
-  const email = req.body.email.trim();
-  const password = req.body.password.trim();
-  const checkUser = getUserByEmail(users, email);
-
-  if (checkUser.email === email && checkUser.password === password) {
-    res.cookie("user_id", checkUser.id);
-    res.redirect("/urls");
+//Post the newly added long and short urls to the database
+app.post("/urls", (req, res) => {
+  //Check if user is logged in
+  if (!req.cookies["user_id"]) {
+    res.send("You must be logged in to create a tiny URL!");
   } else {
-    res.status(403).send("Invalid login");
+    //Create short url
+    const shortURL = generateRandomString(6);
+    let longURL = req.body.longURL;
+
+    //If the user didn't add http:// or https://, add http
+    const httpRegex = /^http:\/\//;
+    const httpsRegex = /^https:\/\//;
+
+    if (!httpRegex.test(longURL) && !httpsRegex.test(longURL)) {
+      longURL = "http://" + longURL;
+    }
+
+    //Save short and long url mapping along with the userID
+    urlDatabase[shortURL] = { longURL: longURL };
+    urlDatabase[shortURL].userID = req.cookies["user_id"];
+
+    //Redirect to the new URL's page
+    res.redirect(`/urls/${shortURL}`);
   }
-});
-
-
-//Clear cookie when user logs out
-app.post("/logout", (req, res) => {
-  res.clearCookie("user_id");
-
-  res.redirect("/login");
 });
 
 
@@ -286,6 +264,7 @@ app.post("/logout", (req, res) => {
 app.post("/register", (req, res) => {
   const email = req.body.email.trim();
   const password = req.body.password.trim();
+  const hashedPassword = bcrypt.hashSync(password, 10);
   const checkUser = getUserByEmail(users, email);
 
   //Validate email and password
@@ -301,11 +280,34 @@ app.post("/register", (req, res) => {
     res.cookie("user_id", id);
 
     users[id] = {
-      id: id, email: email, password: password
+      id: id, email: email, password: hashedPassword
     };
 
     res.redirect("/urls");
   }
+});
+
+
+//Handle user log in input
+app.post("/login", (req, res) => {
+  const email = req.body.email.trim();
+  const password = req.body.password.trim();
+  const checkUser = getUserByEmail(users, email);
+
+  if (checkUser.email === email && bcrypt.compareSync(password, checkUser.password)) {
+    res.cookie("user_id", checkUser.id);
+    res.redirect("/urls");
+  } else {
+    res.status(403).send("Invalid login");
+  }
+});
+
+
+//Clear cookie when user logs out
+app.post("/logout", (req, res) => {
+  res.clearCookie("user_id");
+
+  res.redirect("/login");
 });
 
 
