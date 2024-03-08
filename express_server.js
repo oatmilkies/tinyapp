@@ -1,9 +1,14 @@
 const express = require("express");
 const cookieSession = require('cookie-session');
 const bcrypt = require("bcryptjs");
-const { getUserByEmail } = require("./helpers");
 const app = express();
 const PORT = 8080; // default port 8080
+const {
+  generateRandomString,
+  getUserByEmail,
+  urlsForUserID,
+  checkURL
+} = require("./helpers");
 
 app.set("view engine", "ejs");
 
@@ -38,46 +43,6 @@ const users = {
     email: "user2@example.com",
     password: "dishwasher-funk",
   },
-};
-
-//Generate a random character string 6 charcters long
-const generateRandomString = function(idLength) {
-  const possibleChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  const charLength = possibleChars.length;
-  const length = idLength;
-  let result = '';
-
-  for (let i = 0; i < length; i++) {
-    result += possibleChars.charAt(Math.floor(Math.random() * charLength));
-  }
-  return result;
-};
-
-
-
-//Create a list of urls for a logged in user
-const urlsForUserID = function(urls, id) {
-  const urlList = {};
-
-  for (const key in urls) {
-    if (urls[key].userID === id) {
-      urlList[key] = urls[key].longURL;
-    }
-  }
-
-  return urlList;
-};
-
-//Check if a short url is accessible to a user
-const checkURL = function(userList, database, shortURL, id) {
-  let found = false;
-
-  for (const key in userList) {
-    if (Object.keys(userList).includes(shortURL) && database[key].userID === id) {
-      found = true;
-    }
-  }
-  return found;
 };
 
 
@@ -313,7 +278,7 @@ app.post("/register", (req, res) => {
 app.post("/login", (req, res) => {
   const email = req.body.email.trim();
   const password = req.body.password;
-  const checkUser = getUserByEmail(users, email); 
+  const checkUser = getUserByEmail(users, email);
 
   if (checkUser.email === email && bcrypt.compareSync(password, checkUser.password)) {
     req.session.user_id = checkUser.id;
