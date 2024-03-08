@@ -150,20 +150,24 @@ app.get("/urls", (req, res) => {
 //Render the page showing long url and its short url
 app.get("/urls/:id", (req, res) => {
   //req.params.id is the short url
-  const templateVars = {
-    shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id].longURL,
-    users: users,
-    id: req.cookies["user_id"]
-  };
 
-
-  const userURLs = urlsForUserID(urlDatabase, templateVars.id);
-  //Make sure shortURL belongs to the logged in user
-  if (checkURL(userURLs, urlDatabase, templateVars.shortURL, templateVars.id)) {
-    res.render("urls_show", templateVars);
+  if (!urlDatabase[req.params.id]) {
+    res.send("URL does not exist in the database");
   } else {
-    res.send("Cannot view a URL that does not belong to you!");
+    const templateVars = {
+      shortURL: req.params.id,
+      longURL: urlDatabase[req.params.id].longURL,
+      users: users,
+      id: req.cookies["user_id"]
+    };
+
+    const userURLs = urlsForUserID(urlDatabase, templateVars.id);
+    //Make sure shortURL belongs to the logged in user
+    if (checkURL(userURLs, urlDatabase, templateVars.shortURL, templateVars.id)) {
+      res.render("urls_show", templateVars);
+    } else {
+      res.send("Cannot view a URL that does not belong to you!");
+    }
   }
 });
 
