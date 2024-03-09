@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use(cookieSession({
   name: 'session',
-  keys: ['key1', 'key2'],
+  keys: ['thisisareallylongkeyyy12345', 'thisianotherreallylongkey098765'],
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
@@ -54,7 +54,12 @@ const users = {
 // -- GETS --
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  const userID = req.session.user_id;
+  if (userID) {
+    res.send("Hello!");
+  } else {
+    res.status(302).redirect("/login");
+  }
 });
 
 
@@ -104,7 +109,7 @@ app.get("/urls/new", (req, res) => {
   if (userID) {
     res.render("urls_new", templateVars);
   } else {
-    res.redirect("/login");
+    res.status(302).redirect("/login");
   }
 });
 
@@ -134,7 +139,7 @@ app.get("/urls/:id", (req, res) => {
   const id = req.params.id;
 
   if (!urlDatabase[id]) {
-    res.send("URL does not exist in the database");
+    res.status(404).send("URL does not exist in the database");
   } else {
     const templateVars = {
       shortURL: id,
@@ -164,13 +169,13 @@ app.get("/u/:id", (req, res) => {
 
   //Check if user is logged in
   if (!userID) {
-    res.send("You must be logged in to view the URLS");
+    res.status(403).send("You must be logged in to view the URLS");
     //Make sure shortURL belongs to the logged in user
   } else if (!checkURL(userURLs, urlDatabase, id, userID)) {
-    res.send("Cannot view a URL that does not belong to you!");
+    res.status(403).send("Cannot view a URL that does not belong to you!");
     //Check if shortURL is in the database
   } else if (!urlDatabase[id]) {
-    res.status(400).send(`<html><body>ERROR! Short URL ${id} doesn't exist</b></body></html>\n`);
+    res.status(404).send(`<html><body>ERROR! Short URL ${id} doesn't exist</b></body></html>\n`);
   } else
     res.redirect(longURL);
 });

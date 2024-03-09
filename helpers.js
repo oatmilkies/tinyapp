@@ -58,4 +58,4 @@ module.exports = {
   getUserByEmail,
   urlsForUserID,
   checkURL
-}
+};
