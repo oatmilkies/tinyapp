@@ -24,8 +24,9 @@ TinyApp is built using the following technologies:
 1. Clone this repository to your local machine.
 2. Navigate to the project directory.
 3. Install dependencies using `npm install`.
-4. Run the server using `npm start`.
+4. Run the TinyApp server using `npm start`.
 5. Open your browser and visit `http://localhost:8080`.
+6. Log in or Register a new account.
 
 ## Usage
 
