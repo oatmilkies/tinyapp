@@ -29,9 +29,10 @@ TinyApp is built using the following technologies:
 
 ## Usage
 
-1. Register for a new account or log in if you already have one
-2. Shorten a URL by clicking on "Create New URL" and entering the long URL
-3. Manage your shortened URLs by editing or deleting them from the dashboard
+- Register for a new account or log in if you already have one
+- Shorten a URL by clicking on "Create New URL" and entering the long URL
+- Manage your shortened URLs by editing or deleting them from the dashboard
+- Shortened URLs are saved to your account and not accessible to other users
 
 ## License
 
