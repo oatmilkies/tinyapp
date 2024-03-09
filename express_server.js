@@ -12,7 +12,9 @@ const {
 
 app.set("view engine", "ejs");
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
+
+app.use(express.json());
 
 app.use(cookieSession({
   name: 'session',
@@ -120,7 +122,7 @@ app.get("/urls", (req, res) => {
   if (userID) {
     res.render("urls_index", templateVars);
   } else {
-    res.send("You must be logged in to view URLs");
+    res.status(403).send("You must be logged in to view URLs");
   }
 });
 
@@ -146,7 +148,7 @@ app.get("/urls/:id", (req, res) => {
     if (checkURL(userURLs, urlDatabase, id, userID)) {
       res.render("urls_show", templateVars);
     } else {
-      res.send("Cannot view a URL that does not belong to you!");
+      res.status(403).send("Cannot view a URL that does not belong to you!");
     }
   }
 });
@@ -168,7 +170,7 @@ app.get("/u/:id", (req, res) => {
     res.send("Cannot view a URL that does not belong to you!");
     //Check if shortURL is in the database
   } else if (!urlDatabase[id]) {
-    res.send(`<html><body>ERROR! Short URL ${id} doesn't exist</b></body></html>\n`);
+    res.status(400).send(`<html><body>ERROR! Short URL ${id} doesn't exist</b></body></html>\n`);
   } else
     res.redirect(longURL);
 });
@@ -187,7 +189,7 @@ app.post("/urls/:id/delete", (req, res) => {
   if (!userID) {
     res.send("You must be logged in to delete a URL!");
   } else if (!checkURL(userURLs, urlDatabase, id, userID)) {
-    res.send("Cannot delete a URL that does not belong to you!");
+    res.status(403).send("Cannot delete a URL that does not belong to you!");
     //Delete the database entry
   } else {
     delete urlDatabase[id];
@@ -207,7 +209,7 @@ app.post("/urls/:id", (req, res) => {
   if (!userID) {
     res.send("You must be logged in!");
   } else if (!checkURL(userURLs, urlDatabase, id, userID)) {
-    res.send("Cannot edit a URL that does not belong to you!");
+    res.status(403).send("Cannot edit a URL that does not belong to you!");
     //Save the edited url into the database
   } else {
     urlDatabase[id].longURL = longURL;
@@ -222,7 +224,7 @@ app.post("/urls", (req, res) => {
 
   //Check if user is logged in
   if (!userID) {
-    res.send("You must be logged in to create a tiny URL!");
+    res.status(403).send("You must be logged in to create a tiny URL!");
   } else {
     //Create short url
     const shortURL = generateRandomString(6);
