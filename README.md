@@ -37,18 +37,14 @@ TinyApp is a URL shortening service similar to TinyURL or Bitly. It allows users
 ## Usage
 
 - Register for a new account or log in if you already have one
-   - The Registration page:
-     ![tinyregister](https://github.com/oatmilkies/tinyapp/assets/148240283/9402f972-e108-4f9d-8a52-93c682d99b42)
-
 - Shorten a URL by clicking on "Create New URL" and entering the long URL
-   - Enter the long URL
-     ![tinycreate](https://github.com/oatmilkies/tinyapp/assets/148240283/e8c24eae-3cbb-413a-8839-5da1e81366c5)
-   - Here is your new short URL! You can also edit from this page:
-      ![tinyshorturl](https://github.com/oatmilkies/tinyapp/assets/148240283/e25bbdba-e7e9-4ee7-a4f4-8d121d8b8940)
+   ![tinycreate](https://github.com/oatmilkies/tinyapp/assets/148240283/aca1129c-db64-47fd-b3bd-874357af7121)
 
-- Manage your shortened URLs by editing or deleting them from the MyURLs page
-   - MyURLs
-     ![tinymyurls](https://github.com/oatmilkies/tinyapp/assets/148240283/e0db4c58-2179-4988-98e2-f6636198e8c9)
+   - Here is your new short URL! You can also edit from this page:
+   ![tinyshorturl](https://github.com/oatmilkies/tinyapp/assets/148240283/fc9d4fb4-8293-4972-b5ae-36244f862d84)
+
+- Manage your shortened URLs by editing or deleting them from the MyURLs page   
+   ![tinymyurls](https://github.com/oatmilkies/tinyapp/assets/148240283/c476c9a3-ffaa-4189-9ba2-06c65839a504)
 
 - Shortened URLs are saved to your account and not accessible to other users
 
