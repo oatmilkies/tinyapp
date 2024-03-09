@@ -1,4 +1,4 @@
-<h1 style="text-align: center;"># TinyApp</h1>
+<h1 align="center">TinyApp</h1>
 
 ## About The Project
 
