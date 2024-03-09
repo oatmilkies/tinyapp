@@ -1,59 +1,38 @@
+// Imports
+//External
 const express = require("express");
 const cookieSession = require('cookie-session');
 const bcrypt = require("bcryptjs");
 const methodOverride = require('method-override')
 const app = express();
-const PORT = 8080; // default port 8080
+
+//Internal
 const {
   generateRandomString,
   getUserByEmail,
   urlsForUserID,
   checkURL
 } = require("./helpers");
+const { PORT, urlDatabase, users } = require("./data")
 
+
+// View engine
 app.set("view engine", "ejs");
 
+
+// Middleware
 app.use(express.urlencoded({ extended: false }));
-
 app.use(express.json());
-
+app.use(methodOverride('_method'))
 app.use(cookieSession({
   name: 'session',
   keys: ['thisisareallylongkeyyy12345', 'thisianotherreallylongkey098765'],
-  // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
-app.use(methodOverride('_method'))
 
-//Initial url database
-const urlDatabase = {
-  "b2xVn2": {
-    longURL: "http://www.lighthouselabs.ca",
-    userID: "userRandomID",
-  },
-  "9sm5xK": {
-    longURL: "http://www.google.com",
-    userID: "userRandomID",
-  }
-};
-
-//Initial user database
-const users = {
-  userRandomID: {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur",
-  },
-  user2RandomID: {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk",
-  },
-};
-
-
-// -- GETS --
+// Routes
+// GET
 
 app.get("/", (req, res) => {
   const userID = req.session.user_id;
@@ -177,9 +156,8 @@ app.get("/u/:id", (req, res) => {
     res.redirect(longURL);
 });
 
-
-// -- POSTS --
-
+// Routes
+// POST
 
 //Remove a url from the database
 app.delete("/urls/:id/delete", (req, res) => {

@@ -1,3 +1,5 @@
+// Helper functions for express_server.js
+
 //Generate a random character string 6 charcters long
 const generateRandomString = function(idLength) {
   const possibleChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
