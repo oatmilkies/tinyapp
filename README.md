@@ -1,4 +1,4 @@
-# TinyApp
+<p align="center"># TinyApp</p>
 
 ## About The Project
 
