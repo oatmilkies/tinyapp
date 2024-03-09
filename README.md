@@ -4,6 +4,8 @@
 
 TinyApp is a URL shortening service similar to TinyURL or Bitly. It allows users to shorten long URLs into more manageable and shareable links. This app was created for learning purposes as part of the Lighthouse Labs curriculum.
 
+![tinyapp](https://github.com/oatmilkies/tinyapp/assets/148240283/57dca680-176f-45e4-b5ac-168150246756)
+
 ## Built With
 
 - **Node.js**: Server-side runtime environment
