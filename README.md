@@ -40,7 +40,7 @@ TinyApp is a URL shortening service similar to TinyURL or Bitly. It allows users
 - Shorten a URL by clicking on "Create New URL" and entering the long URL
    ![tinycreate](https://github.com/oatmilkies/tinyapp/assets/148240283/aca1129c-db64-47fd-b3bd-874357af7121)
 
-   - Here is your new short URL! You can also edit from this page:
+- Here is your new short URL! You can visit the link and also edit from this page:
    ![tinyshorturl](https://github.com/oatmilkies/tinyapp/assets/148240283/fc9d4fb4-8293-4972-b5ae-36244f862d84)
 
 - Manage your shortened URLs by editing or deleting them from the MyURLs page   
