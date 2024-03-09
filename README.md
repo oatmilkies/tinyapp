@@ -1,16 +1,10 @@
 # TinyApp
 
+# About The Project
+
 TinyApp is a URL shortening service similar to TinyURL or Bitly. It allows users to shorten long URLs into more manageable and shareable links. This app was created for learning purposes as part of the Lighthouse Labs curriculum.
 
-## Features
-
-- **User Authentication**: Users can register, log in, and log out securely.
-- **URL Shortening**: Users can submit long URLs and receive a shortened version.
-- **Personalized Experience**: Registered users can view a list of URLs they've shortened and edit or delete them.
-
-## Tech Stack
-
-TinyApp is built with:
+## Built With
 
 - **Node.js**: Server-side runtime environment
 - **Express.js**: Web application framework for Node.js
@@ -19,13 +13,22 @@ TinyApp is built with:
 - **method-override**: Middleware for handling HTTP methods such as DELETE and PUT
 - **EJS**: Embedded JavaScript templates for server-side rendering
 
-## Installation
+## Getting Started
 
 1. Clone this repository to your local machine
 2. Navigate to the project directory
-3. Install dependencies using `npm install`
-4. Run the TinyApp server using `npm start`
-5. Open your browser and visit `http://localhost:8080`
+3. Install dependencies using
+   ```
+   npm install
+   ```
+5. Run the TinyApp server using
+  ```
+   npm start
+  ```
+7. Open your browser and visit
+   ```
+   http://localhost:8080
+   ```
 
 ## Usage
 
