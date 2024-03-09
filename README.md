@@ -38,13 +38,13 @@ TinyApp is a URL shortening service similar to TinyURL or Bitly. It allows users
 
 - Register for a new account or log in if you already have one
 - Shorten a URL by clicking on "Create New URL" and entering the long URL
-   ![tinycreate](https://github.com/oatmilkies/tinyapp/assets/148240283/aca1129c-db64-47fd-b3bd-874357af7121)
+   ![tinycreate](https://github.com/oatmilkies/tinyapp/blob/main/docs/tinycreate.jpg?raw=true)
 
 - Here is your new short URL! You can visit the link and also edit from this page:
-   ![tinyshorturl](https://github.com/oatmilkies/tinyapp/assets/148240283/fc9d4fb4-8293-4972-b5ae-36244f862d84)
+   ![tinyshorturl](https://github.com/oatmilkies/tinyapp/blob/main/docs/tinyshorturl.jpg?raw=true)
 
 - Manage your shortened URLs by editing or deleting them from the MyURLs page   
-   ![tinymyurls](https://github.com/oatmilkies/tinyapp/assets/148240283/c476c9a3-ffaa-4189-9ba2-06c65839a504)
+   ![tinymyurls](https://github.com/oatmilkies/tinyapp/blob/main/docs/tinymyurls.jpg?raw=true)
 
 - Shortened URLs are saved to your account and cannot be edited or deleted by other users
 - Shortened URLs are shareable with anyone! :)
