@@ -138,23 +138,14 @@ app.get("/urls/:id", (req, res) => {
 //Redirect to the long url (id is the short url)
 app.get("/u/:id", (req, res) => {
   //id is the shortURL
-  const id = req.params.id;
-  const longURL = urlDatabase[id].longURL;
-  const userID = req.session.user_id;
-  const userURLs = urlsForUserID(urlDatabase, userID);
-
-  //Check if user is logged in
-  if (!userID) {
-    res.status(403).send("You must be logged in to view the URLS");
-    //Make sure shortURL belongs to the logged in user
-  } else if (!checkURL(userURLs, urlDatabase, id, userID)) {
-    res.status(403).send("Cannot view a URL that does not belong to you!");
-    //Check if shortURL is in the database
-  } else if (!urlDatabase[id]) {
+  const id = req.params.id; 
+  
+  if (!urlDatabase[id]) {
     res.status(404).send(`<html><body>ERROR! Short URL ${id} doesn't exist</b></body></html>\n`);
   } else
-    res.redirect(longURL);
+    res.redirect(urlDatabase[id].longURL);
 });
+
 
 // Routes
 // POST
