@@ -2,6 +2,7 @@
 
 URL Shortener
 This is a web-based URL shortener built with Node.js and Express. It allows users to shorten long URLs into manageable links, making it easier to share them across various platforms. Users can register, log in, create short URLs, edit URLs, and delete URLs.
+(https://user-images.githubusercontent.com/25181517/183568594-85e280a7-0d7e-4d1a-9028-c8c2209e073c.png)
 
 ## Table of Contents
 - Features
