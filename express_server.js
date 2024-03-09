@@ -232,7 +232,8 @@ app.post("/urls", (req, res) => {
 app.post("/register", (req, res) => {
   const email = req.body.email.trim();
   const password = req.body.password;
-  const hashedPassword = bcrypt.hashSync(password, 10);
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPassword = bcrypt.hashSync(password, salt);
   const checkUser = getUserByEmail(users, email);
 
   //Validate email and password
