@@ -34,16 +34,6 @@ TinyApp is built using the following technologies:
 3. Manage your shortened URLs by editing or deleting them from the dashboard.
 4. Share the shortened URL with others!
 
-## Contributing
-
-Contributions are welcome! If you'd like to contribute to TinyApp, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/improvement-fix`).
-3. Make your changes and commit them (`git commit -am 'Add new feature'`).
-4. Push to the branch (`git push origin feature/improvement-fix`).
-5. Create a new pull request.
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
