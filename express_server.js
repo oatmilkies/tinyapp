@@ -1,6 +1,7 @@
 const express = require("express");
 const cookieSession = require('cookie-session');
 const bcrypt = require("bcryptjs");
+const methodOverride = require('method-override')
 const app = express();
 const PORT = 8080; // default port 8080
 const {
@@ -23,6 +24,7 @@ app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
+app.use(methodOverride('_method'))
 
 //Initial url database
 const urlDatabase = {
@@ -185,7 +187,7 @@ app.get("/u/:id", (req, res) => {
 
 
 //Remove a url from the database
-app.post("/urls/:id/delete", (req, res) => {
+app.delete("/urls/:id/delete", (req, res) => {
   //id is the shortURL
   const id = req.params.id;
   const userID = req.session.user_id;
@@ -204,7 +206,7 @@ app.post("/urls/:id/delete", (req, res) => {
 
 
 //Edit a long url in the database
-app.post("/urls/:id", (req, res) => {
+app.put("/urls/:id", (req, res) => {
   //id is the shortURL
   const id = req.params.id;
   const longURL = req.body.longURL;

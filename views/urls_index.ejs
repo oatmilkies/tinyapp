@@ -42,7 +42,10 @@
             </td>
             <!-- Button to delete each database entry -->
             <td>
-              <form method="POST" action="/urls/<%= id %>/delete">
+              <form
+                method="POST"
+                action="/urls/<%= id %>/delete?_method=DELETE"
+              >
                 <button type="submit" class="btn btn-danger">Delete</button>
               </form>
             </td>
