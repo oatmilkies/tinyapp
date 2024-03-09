@@ -15,21 +15,19 @@ TinyApp is a URL shortening service similar to TinyURL or Bitly. It allows users
 
 ## Getting Started
 
-1. Clone this repository to your local machine
-2. Navigate to the project directory
-3. Install dependencies using
+1. Install dependencies using
    ```
    npm install
    ```
-5. Clone the repo
+2. Clone the repo
    ```
    git clone git@github.com:oatmilkies/tinyapp.git
    ```
-7. Run the TinyApp server
+3. Run the TinyApp server
    ```
    npm start
    ```
-8. Open your browser and visit
+4. Open your browser and visit
    ```
    http://localhost:8080
    ```
