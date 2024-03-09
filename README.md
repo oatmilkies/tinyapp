@@ -10,7 +10,7 @@ TinyApp is a URL shortening service similar to TinyURL or Bitly. It allows users
 
 ## Tech Stack
 
-TinyApp is built using the following technologies:
+TinyApp is built with:
 
 - **Node.js**: Server-side runtime environment
 - **Express.js**: Web application framework for Node.js
@@ -36,4 +36,4 @@ TinyApp is built using the following technologies:
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](https://github.com/git/git-scm.com/blob/main/MIT-LICENSE.txt).
