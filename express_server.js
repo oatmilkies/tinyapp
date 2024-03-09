@@ -70,11 +70,6 @@ app.get("/urls.json", (req, res) => {
 });
 
 
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
-
-
 //Render the new user registration page
 app.get("/register", (req, res) => {
   const userID = req.session.user_id;
