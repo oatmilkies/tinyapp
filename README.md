@@ -2,19 +2,6 @@
 
 URL Shortener
 This is a web-based URL shortener built with Node.js and Express. It allows users to shorten long URLs into manageable links, making it easier to share them across various platforms. Users can register, log in, create short URLs, edit URLs, and delete URLs.
-<div align="center">
-	<code><img width="50" src="https://user-images.githubusercontent.com/25181517/183898054-b3d693d4-dafb-4808-a509-bab54cf5de34.png" alt="Bootstrap" title="Bootstrap"/></code>
-	<code><img width="50" src="https://user-images.githubusercontent.com/25181517/183568594-85e280a7-0d7e-4d1a-9028-c8c2209e073c.png" alt="Node.js" title="Node.js"/></code>
-	<code><img width="50" src="https://user-images.githubusercontent.com/25181517/183859966-a3462d8d-1bc7-4880-b353-e2cbed900ed6.png" alt="Express" title="Express"/></code>
-</div>
-
-## Table of Contents
-- Features
-- Installation
-- Usage
-- Routes
-- Dependencies
-- License
 
 # Features
 - User Registration: Users can register with their email and password
